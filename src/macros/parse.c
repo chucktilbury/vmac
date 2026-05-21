@@ -1,0 +1,440 @@
+
+#include "common.h"
+#include "parse.h"
+// #include "symbols.h"
+#include "parse_define.h"
+#include "parse_ifelse.h"
+#include "parse_ref.h"
+#include "emit.h"
+
+/*
+ * Discard spaces.
+ */
+void consume_space(void) {
+    ENTER;
+    int ch = crnt_char();
+    while(isspace(ch)) {
+        ch = consume_char();
+    }
+    RETURN();
+}
+
+void emit_space(void) {
+    ENTER;
+    int ch = crnt_char();
+    while(isspace(ch)) {
+        EMITC(ch);
+        ch = consume_char();
+    }
+    RETURN();
+}
+
+void test_end_of_file(void) {
+
+    if(crnt_char() == EOF)
+        error("unexpected end of file");
+}
+
+void test_end_of_input(void) {
+
+    if(crnt_char() == EOI)
+        error("unexpected end of input");
+}
+
+/*
+ * Create an error if the current character is EOF or EOI.
+ */
+void test_end_error(void) {
+
+    test_end_of_file();
+    test_end_of_input();
+}
+
+/*
+ * Scan a name into a string_t*. If a name cannot be scanned, then return NULL.
+ */
+string_t* scan_name(void) {
+
+    ENTER;
+    PRNCH;
+
+    int ch = crnt_char();
+    string_t* tmp = NULL;
+
+    if(isalpha(ch) || ch == '_') {
+        tmp = create_string(NULL);
+        do {
+            append_string_char(tmp, ch);
+            ch = consume_char();
+        } while(isalnum(ch) || ch == '_');
+
+        TRACE("string: \"%s\"", tmp->buffer);
+    }
+
+    PRNCH;
+    RETURN(tmp);
+}
+
+string_t* scan_literal_string(void) {
+    ENTER;
+
+    consume_space();
+    PRNCH;
+
+    int ch = crnt_char();
+    string_t* tmp = create_string(NULL);
+    consume_char(); // do not include the '\"'
+
+    int finished = false;
+    while(!finished) {
+        ch = crnt_char();
+        if(ch == '\\') {
+            consume_char();
+            ch = crnt_char();
+            switch(ch) {
+                case '\'':
+                    append_string_char(tmp, '\'');
+                    consume_char();
+                    break;
+                case '\"':
+                    append_string_char(tmp, '\"');
+                    consume_char();
+                    break;
+                case '\\':
+                    append_string_char(tmp, '\\');
+                    consume_char();
+                    break;
+                case 'a':
+                    append_string_char(tmp, '\a');
+                    consume_char();
+                    break;
+                case 'b':
+                    append_string_char(tmp, '\b');
+                    consume_char();
+                    break;
+                case 'f':
+                    append_string_char(tmp, '\f');
+                    consume_char();
+                    break;
+                case 'n':
+                    append_string_char(tmp, '\n');
+                    consume_char();
+                    break;
+                case 'r':
+                    append_string_char(tmp, '\r');
+                    consume_char();
+                    break;
+                case 't':
+                    append_string_char(tmp, '\t');
+                    consume_char();
+                    break;
+                case 'v':
+                    append_string_char(tmp, '\v');
+                    consume_char();
+                    break;
+                case 'e':
+                    append_string_char(tmp, 0x1b);
+                    consume_char();
+                    break;
+                case 'x': {
+                    // next 2 characters must be hex digits
+                    char buf[4] = { '\0', '\0', '\0', '\0' };
+                    consume_char(); // the 'x'
+                    ch = crnt_char();
+                    if(!isxdigit(ch))
+                        consume_error("a hex digit");
+                    else
+                        buf[0] = ch;
+
+                    consume_char(); // first digit
+                    ch = crnt_char();
+                    if(!isxdigit(ch))
+                        consume_error("a hex digit");
+                    else
+                        buf[1] = ch;
+
+                    consume_char(); // second digit
+                    append_string_char(tmp, (unsigned char)strtol(buf, NULL, 16));
+                }
+                default:
+                    append_string_char(tmp, ch);
+                    consume_char();
+                    break;
+            }
+        }
+        else if(ch == '\"') {
+            consume_char();
+            finished = true;
+        }
+        else if(ch == '\n') {
+            consume_char();
+            error("new line not allowed in quoted strings");
+        }
+        else {
+            consume_char();
+            append_string_char(tmp, ch);
+        }
+
+        test_end_error();
+    }
+
+    PRNCH;
+    RETURN(tmp);
+}
+
+directive_type_t directive_type(string_t* str) {
+    ENTER;
+
+    directive_type_t retv = NOT_A_DIRECTIVE;
+
+    if(str != NULL) {
+        string_t* tmp = upcase_string(str);
+        if(!comp_string(tmp, "DEFINE")) {
+            TRACE("DEFINE_DIRECTIVE");
+            retv = DEFINE_DIRECTIVE;
+        }
+        else if(!comp_string(tmp, "IF")) {
+            TRACE("IF_DIRECTIVE");
+            retv = IF_DIRECTIVE;
+        }
+        else if(!comp_string(tmp, "IMPORT") || !comp_string(tmp, "INCLUDE")) {
+            TRACE("IMPORT_DIRECTIVE");
+            retv = IMPORT_DIRECTIVE;
+        }
+        else if(!comp_string(tmp, "ELSE")) {
+            TRACE("ELSE_DIRECTIVE");
+            retv = ELSE_DIRECTIVE;
+        }
+        else if(!comp_string(tmp, "ERROR")) {
+            TRACE("ERROR_DIRECTIVE");
+            retv = ERROR_DIRECTIVE;
+        }
+        else if(!comp_string(tmp, "MESSAGE")) {
+            TRACE("MESSAGE_DIRECTIVE");
+            retv = MESSAGE_DIRECTIVE;
+        }
+#ifdef USE_TRACE
+        else
+            TRACE("NOT_A_DIRECTIVE");
+#endif
+        destroy_string(tmp);
+    }
+
+    RETURN(retv);
+}
+
+void parse_import(void) {
+
+    ENTER;
+
+    string_t* tmp = scan_literal_string();
+
+    if(tmp != NULL) {
+        TRACE("name to open: %s", tmp->buffer);
+        load_input_buffer(tmp);
+        destroy_string(tmp);
+    }
+    else
+        consume_error("a quoted string for .import directive");
+
+    RETURN();
+}
+
+void parse_error(void) {
+
+    ENTER;
+
+    string_t* tmp = scan_literal_string();
+
+    if(tmp != NULL) {
+        TRACE("error: %s", tmp->buffer);
+        const char* fname = get_file_name()->buffer;
+        if(fname != NULL)
+            fprintf(stderr, "error: %s:%d:%d: %s", fname, get_line_no(), get_col_no(), tmp->buffer);
+        else
+            fprintf(stderr, "error: %s", tmp->buffer);
+        destroy_string(tmp);
+    }
+    else
+        consume_error("a quoted string for .error directive");
+    exit(1);
+    RETURN();
+}
+
+void parse_message(void) {
+
+    ENTER;
+
+    string_t* tmp = scan_literal_string();
+
+    if(tmp != NULL) {
+        TRACE("message: %s", tmp->buffer);
+        const char* fname = get_file_name()->buffer;
+        if(fname != NULL)
+            fprintf(stderr, "message: %s:%d:%d: %s", fname, get_line_no(), get_col_no(), tmp->buffer);
+        else
+            fprintf(stderr, "message: %s", tmp->buffer);
+        destroy_string(tmp);
+    }
+    else
+        consume_error("a quoted string for .message directive");
+
+    RETURN();
+}
+
+static void _consume_sl_comment(void) {
+    ENTER;
+    int ch = crnt_char();
+
+    while(true) {
+        if(ch == EOL) {
+            consume_char();
+            break;
+        }
+        else if(ch == EOF) {
+            consume_char();
+            warning("unexpected end of file in sl comment");
+            break;
+        }
+        ch = consume_char();
+    }
+    RETURN();
+}
+
+static void _consume_ml_comment(void) {
+    ENTER;
+    int ch;
+    bool finished = false;
+
+    while(!finished) {
+        ch = crnt_char();
+        if(ch == '*') {
+            ch = consume_char();
+            if(ch == '/') {
+                consume_char();
+                break;
+            }
+            else if(ch == EOF) {
+                warning("unexpected end of file in ml comment");
+                finished = true;
+            }
+        }
+        else if(ch == EOF) {
+            warning("unexpected end of file in ml comment");
+            finished = true;
+        }
+        consume_char();
+    }
+    RETURN();
+}
+
+void parse_comment(void) {
+    ENTER;
+
+    consume_char();
+    int ch = crnt_char();
+    TRACE("char here: %c", ch);
+    if(ch == '/') {
+        consume_char();
+        _consume_sl_comment();
+        RETURN();
+    }
+    else if(ch == '*') {
+        consume_char();
+        _consume_ml_comment();
+        RETURN();
+    }
+    else {
+        // printf("\n>>> here\n");
+        EMITC('/');
+        RETURN();
+    }
+
+    RETURN();
+}
+
+/*
+ * Process the entry point to a directive from the root context.
+ */
+void parse_directive(void) {
+    ENTER;
+
+    consume_char(); // the leading '.'
+    string_t* name = scan_name();
+    if(name != NULL) {
+        TRACE("name: %s", name->buffer);
+        switch(directive_type(name)) {
+            case IF_DIRECTIVE:
+                parse_ifelse();
+                break;
+            case ELSE_DIRECTIVE:
+                error("misplaced .else directive");
+                break;
+            case DEFINE_DIRECTIVE:
+                parse_define();
+                break;
+            case IMPORT_DIRECTIVE:
+                parse_import();
+                break;
+            case ERROR_DIRECTIVE:
+                parse_error();
+                break;
+            case MESSAGE_DIRECTIVE:
+                parse_message();
+                break;
+            case NOT_A_DIRECTIVE:
+                TRACE("not a directive 1");
+                EMITC('.');
+                EMITS(name);
+                break;
+        }
+        destroy_string(name);
+    }
+    else {
+        TRACE("not a directive 2");
+        EMITC('.');
+    }
+
+    RETURN();
+}
+
+/*
+ * Scan the input for one of the objects that is acceptable outside of a
+ * directive. If the character does not introduce an object then put it in the
+ * output buffer.
+ */
+void parse_input(void) {
+    ENTER;
+
+    bool finished = false;
+    while(!finished) {
+        int ch = crnt_char();
+        switch(ch) {
+            case '/':
+                parse_comment();
+                break;
+            case '.':
+                parse_directive();
+                break;
+            case '@':
+                parse_ref();
+                break;
+            case EOF:
+                TRACE("end of file");
+                pop_input_buffer();
+                break;
+            case EOI:
+                TRACE("end of input");
+                finished = true;
+                break;
+            default:
+                // emit everything, including space
+                // PRNCH;
+                EMITC(crnt_char());
+                consume_char();
+                break;
+        }
+    }
+
+    RETURN();
+}

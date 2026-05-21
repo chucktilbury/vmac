@@ -1,0 +1,224 @@
+
+#include "common.h"
+#include "symbols.h"
+//#include "parms.h"
+#include "parse.h"
+
+symbol_t* sym_table = NULL;
+
+static parm_t* _find_parm(parm_list_t* lst, string_t* name) {
+
+    ENTER;
+    parm_t* p = NULL;
+    TRACE("find name: %s", name->buffer);
+    TRACE("list len: %d", lst->len);
+    for(int i = 0; i < lst->len; i++) {
+        TRACE("compare: %s", lst->lst[i]->name->buffer);
+        if(!comp_string_str(name, lst->lst[i]->name)) {
+            p = lst->lst[i];
+            break;
+        }
+    }
+    RETURN(p);
+}
+
+static parm_list_t* _create_parm_list(void) {
+    ENTER;
+
+    parm_list_t* lst = _ALLOC_TYPE(parm_list_t);
+    lst->cap = 1 << 3;
+    lst->len = 0;
+    lst->lst = _ALLOC_ARRAY(parm_t*, lst->cap);
+
+    RETURN(lst);
+}
+
+static void _destroy_parm_list(parm_list_t* lst) {
+    ENTER;
+
+    if(lst != NULL) {
+        for(int i = 0; i < lst->len; i++) {
+            destroy_string(lst->lst[i]->name);
+            if(lst->lst[i]->repl != NULL)
+                destroy_string(lst->lst[i]->repl);
+            _FREE(lst->lst[i]);
+        }
+
+        _FREE(lst->lst);
+        _FREE(lst);
+    }
+
+    RETURN();
+}
+
+symbol_t* create_symbol(string_t* tag) {
+
+    ENTER;
+    TRACE("create_symbol: %s", tag->buffer);
+    symbol_t* sym = _ALLOC_TYPE(symbol_t);
+    sym->tag = tag;
+    sym->arity = 0;
+    sym->plist = _create_parm_list();
+
+    sym->line = LINE_NO;
+    sym->col = COL_NO;
+    sym->fname = create_string(FILE_NAME);
+
+    RETURN(sym);
+}
+
+void _destroy_sym_table(symbol_t* node) {
+
+    if(node != NULL) {
+        _destroy_sym_table(node->left);
+        _destroy_sym_table(node->right);
+
+        destroy_string(node->tag);
+        destroy_string(node->repl_text);
+        _destroy_parm_list(node->plist);
+        _FREE(node);
+    }
+}
+
+void destroy_sym_table(void) {
+
+    ENTER;
+    _destroy_sym_table(sym_table);
+    RETURN();
+}
+
+static void _insert_symbol(symbol_t* node, symbol_t* sym) {
+
+    int val = comp_string_str(node->tag, sym->tag);
+    if(0 > val) {
+        if(node->right != NULL)
+            _insert_symbol(node->right, sym);
+        else
+            node->right = sym;
+    }
+    else if(0 < val) {
+        if(node->left != NULL)
+            _insert_symbol(node->left, sym);
+        else
+            node->left = sym;
+    }
+    else {
+        warning("ignoring re-definition of symbol: %s\n"
+                "    previous definition was here: %s:%d:%d",
+                sym->tag->buffer, sym->fname->buffer, sym->line, sym->col);
+    }
+}
+
+symbol_t* insert_symbol(string_t* tag) {
+
+    ENTER;
+
+    symbol_t* sym = create_symbol(tag);
+    if(sym_table == NULL)
+        sym_table = sym;
+    else
+        _insert_symbol(sym_table, sym);
+
+    RETURN(sym);
+}
+
+static symbol_t* _find_symbol(symbol_t* root, string_t* tag) {
+
+    if(root == NULL)
+        return NULL;
+
+    int val = comp_string_str(root->tag, tag);
+    if(0 > val) {
+        if(root->right != NULL)
+            return _find_symbol(root->right, tag);
+        else
+            return NULL;
+    }
+    else if(0 < val) {
+        if(root->left != NULL)
+            return _find_symbol(root->left, tag);
+        else
+            return NULL;
+    }
+    else
+        return root;
+}
+
+symbol_t* find_symbol(string_t* tag) {
+
+    ENTER;
+    TRACE("search for: %s", tag->buffer);
+
+    symbol_t* sym = NULL;
+    if(sym_table != NULL)
+        sym = _find_symbol(sym_table, tag);
+
+    TRACE("found = %s", sym ? "TRUE" : "FALSE");
+    RETURN(sym);
+}
+
+/*
+ * This is called while the macro is being expanded into the output. The
+ * name appears in the value of the macro and gets expanded upon reference.
+ *
+ * Return NULL of the parameter name is not found. That is not an error.
+ * Just echo the name with the '@'.
+ *
+ * Return a blank string if the value of the parameter is blank.
+ *
+ * Return the full string of the named parameter has a value.
+ */
+string_t* get_parm(symbol_t* sym, string_t* name) {
+    ENTER;
+
+    string_t* s = NULL;
+    parm_t* p = NULL;
+
+    if(NULL != (p = _find_parm(sym->plist, name))) {
+        if(p->repl == NULL)
+            s = create_string(NULL);
+        else
+            s = copy_string(p->repl);
+    }
+    else
+        RETURN(NULL);
+
+    RETURN(s);
+}
+
+bool parm_exists(symbol_t* sym, string_t* name) {
+    ENTER;
+    if(_find_parm(sym->plist, name))
+        RETURN(true);
+    else
+        RETURN(false);
+}
+
+static void _dump_sym_table(symbol_t* node) {
+
+    if(node != NULL) {
+        _dump_sym_table(node->left);
+        _dump_sym_table(node->right);
+
+        printf("\ntag: \"%s\"\n", node->tag->buffer);
+        printf("\tarity: %d\n", node->arity);
+        printf("\tparams:\n");
+        for(int i = 0; i < node->plist->len; i++)
+            printf("\t\t%s\n", node->plist->lst[i]->name->buffer);
+        if(node->repl_text != NULL) {
+            // printf("\trepl text: %s\n", node->repl_text->buffer);
+            printf("\trepl text:\n");
+            hexdump(node->repl_text->buffer, node->repl_text->len);
+        }
+        else
+            printf("\trepl text: -blank-\n");
+    }
+}
+
+void dump_symbol_table(void) {
+
+    print_legend("begin symbols");
+    _dump_sym_table(sym_table);
+    fputc('\n', stdout);
+    print_legend("end symbols");
+}
