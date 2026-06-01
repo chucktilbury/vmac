@@ -8,6 +8,21 @@ extern byte_buffer_t* _data;
 
 pseudo_sym_t* _root = NULL;
 
+#if USE_DUMP
+#define DUMP dump(_root)
+
+void dump(pseudo_sym_t* root) {
+    if(root->right != NULL)
+        dump(root->right);
+    if(root->left != NULL)
+        dump(root->right);
+    printf("index: 0x%08X\n", root->idx);
+}
+
+#else
+#define DUMP
+#endif
+
 static void __insert(pseudo_sym_t* root, pseudo_sym_t* node) {
 
     if(root->idx > node->idx) {
@@ -57,16 +72,6 @@ pseudo_sym_t* __find(pseudo_sym_t* root, uint32_t idx) {
 pseudo_sym_t* find_sym(uint32_t idx) {
 
     return __find(_root, idx);
-}
-
-static void dump(pseudo_sym_t* root) {
-
-    if(root->right != NULL)
-        dump(root->right);
-    if(root->left != NULL)
-        dump(root->right);
-
-    printf("index: 0x%08X\n", root->idx);
 }
 
 static void _operand(size_t* mark) {
@@ -144,7 +149,7 @@ void scan_code(void) {
 
     }
 
-    //dump(_root);
+    DUMP;
     RETURN();
 }
 
