@@ -208,7 +208,7 @@ static void _dump_sym_table(symbol_t* node) {
         if(node->repl_text != NULL) {
             // printf("\trepl text: %s\n", node->repl_text->buffer);
             printf("\trepl text:\n");
-            hexdump(node->repl_text->buffer, node->repl_text->len);
+            hexdump((const unsigned char*)node->repl_text->buffer, node->repl_text->len);
         }
         else
             printf("\trepl text: -blank-\n");

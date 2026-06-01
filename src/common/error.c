@@ -8,9 +8,9 @@ void dump_symbol_table(void);
 
 void warning(const char* fmt, ...) {
 
-    if(FILE_NAME != NULL)
-        fprintf(stderr, "warning: %s:%d:%d: ", FILE_NAME, LINE_NO, COL_NO);
-    else
+    // if(FILE_NAME != NULL)
+    //     fprintf(stderr, "warning: %s:%d:%d: ", FILE_NAME, LINE_NO, COL_NO);
+    // else
         fprintf(stderr, "warning: ");
 
     va_list args;
@@ -25,9 +25,9 @@ void warning(const char* fmt, ...) {
 
 void error(const char* fmt, ...) {
 
-    if(FILE_NAME != NULL)
-        fprintf(stderr, "error: %s:%d:%d: ", FILE_NAME, LINE_NO, COL_NO);
-    else
+    // if(FILE_NAME != NULL)
+    //     fprintf(stderr, "error: %s:%d:%d: ", FILE_NAME, LINE_NO, COL_NO);
+    // else
         fprintf(stderr, "error: ");
 
     va_list args;
@@ -37,22 +37,22 @@ void error(const char* fmt, ...) {
     va_end(args);
 
     fputc('\n', stderr);
-#ifdef USE_TRACE
-    if(verbosity >= DEFAULT_TRACE) {
-        dump_input_buffer();
-        //dump_output_buffer();
-        dump_symbol_table();
-    }
-#endif
+// #ifdef USE_TRACE
+//     if(verbosity >= DEFAULT_TRACE) {
+//         dump_input_buffer();
+//         //dump_output_buffer();
+//         dump_symbol_table();
+//     }
+// #endif
     exit(1);
 }
 
 void consume_error(const char* where) {
 
-    if(FILE_NAME != NULL)
-        fprintf(stderr, "error: %s:%d:%d: expected %s but got ",
-                FILE_NAME, LINE_NO, COL_NO, where);
-    else
+    // if(FILE_NAME != NULL)
+    //     fprintf(stderr, "error: %s:%d:%d: expected %s but got ",
+    //             FILE_NAME, LINE_NO, COL_NO, where);
+    // else
         fprintf(stderr, "error: expected %s but got ", where);
 
     string_t* tmp = create_string(NULL);

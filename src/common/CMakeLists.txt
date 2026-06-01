@@ -10,11 +10,12 @@ add_library(${PROJECT_NAME} STATIC
     string_buffer.c
     #char_buffer.c
     input_buffer.c
-    #output_buffer.c
+    byte_buffer.c
     trace.c
     cmdline.c
     error.c
     hexdump.c
+    opcodes.c
     colors.c
 )
 

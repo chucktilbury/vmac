@@ -4,7 +4,7 @@
 /*
  * 16 items on a line
  */
-void hexdump(const char* buffer, int size) {
+void hexdump(const unsigned char* buffer, int size) {
 
     unsigned int index = 0;
     unsigned int line = 0;
@@ -21,7 +21,7 @@ void hexdump(const char* buffer, int size) {
             else
                 printf(" %02X", buffer[line + index]);
         }
-        printf(" --");
+        printf(" -");
         for(; line < 16; line++) {
             if(line + index > (unsigned int)size) {
                 finished = true;
@@ -30,8 +30,19 @@ void hexdump(const char* buffer, int size) {
             else
                 printf(" %02X", buffer[line + index]);
         }
-        printf("  ");
-        for(line = 0; line < 16; line++) {
+        printf("   ");
+        for(line = 0; line < 8; line++) {
+            if(line + index > (unsigned int)size) {
+                finished = true;
+                printf(" ");
+            }
+            else {
+                int c = buffer[line + index];
+                printf("%c", isprint(c) ? c : '.');
+            }
+        }
+        printf(" - ");
+        for(; line < 16; line++) {
             if(line + index > (unsigned int)size) {
                 finished = true;
                 printf(" ");

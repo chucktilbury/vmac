@@ -17,6 +17,7 @@ int get_line_no(void);
 int get_col_no(void);
 bool valid_input_buffer(void);
 void dump_input_buffer(void);
+string_t* get_crnt_input_buffer(void);
 
 #define FILE_NAME raw_string(get_file_name())
 #define LINE_NO get_line_no()

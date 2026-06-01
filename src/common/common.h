@@ -17,9 +17,10 @@
 #include "string_list.h"
 #include "cmdline.h"
 #include "input_buffer.h"
-//#include "output_buffer.h"
+#include "byte_buffer.h"
 #include "error.h"
 #include "hexdump.h"
 #include "colors.h"
+#include "opcodes.h"
 
 #endif /* _COMMON_H_ */

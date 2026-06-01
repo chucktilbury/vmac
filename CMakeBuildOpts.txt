@@ -6,6 +6,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_files
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/src/asm
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/../common
     "/usr/local/include"
@@ -31,6 +32,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "debug")
         -DUSE_TRACE
         -DUSE_ASSERTS
         -DUSE_COLORS
+        -Wno-address-of-packed-member
+        -Wno-unneeded-internal-declaration
     )
 elseif(CMAKE_BUILD_TYPE STREQUAL "release")
     add_definitions(

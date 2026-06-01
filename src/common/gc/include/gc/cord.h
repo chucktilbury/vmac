@@ -65,7 +65,7 @@ extern "C" {
 #if defined(GC_DLL) && !defined(CORD_NOT_DLL) && !defined(CORD_API)
 /* Same as for GC_API in gc_config_macros.h.  */
 #ifdef CORD_BUILD
-#if defined(__MINGW32__) && !defined(__cplusplus) || defined(__CEGCC__)
+#if defined(__MINGW32__) && !defined(__cpluspl1us) || defined(__CEGCC__)
 #define CORD_API __declspec(dllexport)
 #elif defined(_MSC_VER) || defined(__DMC__) || defined(__BORLANDC__) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__WATCOMC__)
 #define CORD_API extern __declspec(dllexport)

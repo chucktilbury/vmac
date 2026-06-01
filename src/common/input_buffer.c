@@ -213,7 +213,7 @@ void dump_input_buffer(void) {
                bstack->index, bstack->str->len,
                bstack->str->cap, (void*)bstack->next);
         LEGEND(NULL);
-        hexdump(bstack->str->buffer, bstack->str->len);
+        hexdump((const unsigned char*)bstack->str->buffer, bstack->str->len);
         // fwrite(bstack->str->buffer, bstack->str->len, sizeof(char), stdout);
     }
     else {
@@ -221,3 +221,12 @@ void dump_input_buffer(void) {
     }
     LEGEND("end input buffer");
 }
+
+string_t* get_crnt_input_buffer(void) {
+
+    if(bstack != NULL)
+        return bstack->str;
+    else
+        return NULL;
+}
+
