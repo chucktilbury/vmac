@@ -1,8 +1,10 @@
 
 #include "common.h"
+#include "symbols.h"
 
 extern byte_buffer_t* _code;
 extern byte_buffer_t* _data;
+extern bool debug_flag;
 
 void do_operand(FILE* fp, size_t* mark) {
     opcode_t op = iterate_byte_buffer_uint8(_code, mark);
@@ -60,12 +62,24 @@ void do_operand(FILE* fp, size_t* mark) {
             break;
         case OPERAND_LABEL: {
                 uint32_t idx = iterate_byte_buffer_uint32(_code, mark);
-                fprintf(fp, "_%08X_code", idx);
+                if(debug_flag) {
+                    symbol_t* sym = find_symbol(idx >>= 0x01);
+                    if(sym != NULL)
+                        fprintf(fp, "%s", sym->tag->buffer);
+                }
+                else
+                    fprintf(fp, "_%08X_code", idx);
             }
             break;
         case OPERAND_ILABEL: {
                 uint32_t idx = iterate_byte_buffer_uint32(_code, mark);
-                fprintf(fp, "_%08X_data", idx);
+                if(debug_flag) {
+                    symbol_t* sym = find_symbol(idx >>= 0x01);
+                    if(sym != NULL)
+                        fprintf(fp, "# %s", sym->tag->buffer);
+                }
+                else
+                    fprintf(fp, "_%08X_data", idx >>= 0x01);
             }
             break;
         default:

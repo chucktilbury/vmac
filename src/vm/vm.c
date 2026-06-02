@@ -1,10 +1,4 @@
 #include "common.h"
-#include "vm_common.h"
-#include "operand.h"
-#include "disasm_data.h"
-#include "disasm_code.h"
-#include "scan.h"
-#include "symbols.h"
 
 byte_buffer_t* _data = NULL;
 byte_buffer_t* _code = NULL;
@@ -39,61 +33,35 @@ void load_file(string_t* fname) {
     RETURN();
 }
 
+
 void cmdline(int argc, char** argv, char** env) {
 
-    init_cmdline("disasm", "dis-assembler", "0.1");
-    add_cmdline('i', "infile", "ifile", "Specify the input file name", NULL, NULL, CMD_STR | CMD_ARGS | CMD_REQD);
-    add_cmdline('o', "outfile", "ofile", "Specify the output file name", NULL, NULL, CMD_STR | CMD_ARGS);
-    // add_cmdline('I', NULL, "path", "Add to the import path", NULL, NULL, CMD_STR | CMD_ARGS | CMD_LIST);
+    init_cmdline("vm", "virtual machine", "0.1");
     add_cmdline('v', "verbosity", "verbosity", "Print more information", "1", NULL, CMD_NUM | CMD_ARGS);
+    add_cmdline('d', "debug", "debug", "debug mode", "0", NULL, CMD_SWITCH);
     add_cmdline('h', "help", NULL, "Print this helpful information", NULL, cmdline_help, CMD_NONE);
     add_cmdline('V', "version", NULL, "Show the program version", NULL, cmdline_vers, CMD_NONE);
+    add_cmdline(0, NULL, NULL, NULL, NULL, NULL, CMD_DIV);
+    add_cmdline(0, NULL, "ifile", "Name of file to input", NULL, NULL, CMD_REQD | CMD_ANON);
     parse_cmdline(argc, argv, env);
+
     verbosity = atoi(raw_string(get_cmd_opt("verbosity")));
+    debug_flag = atoi(raw_string(get_cmd_opt("debug")));
+
     setup_env();
 }
+
+void run(void);
 
 int main(int argc, char** argv, char** env) {
 
     cmdline(argc, argv, env);
 
     ENTER;
-
     string_t* fname = get_cmd_opt("ifile");
     load_file(fname);
-    fname = get_cmd_opt("ofile");
-    FILE* fp = NULL;
-    if(fname != NULL) {
-        fp = fopen(fname->buffer, "w");
-        if(fp == NULL)
-            error("cannot open output file \"%s\": %s", fname->buffer, strerror(errno));
-    }
-    else
-        fp = stdout;
 
-#ifdef USE_TRACE
-    if(verbosity >= DEFAULT_TRACE - 10) {
-        fputs("/*\n", fp);
-        fprintf(fp, "-- data buffer\n");
-        hexdump(_data->buffer, _data->len);
-        fprintf(fp, "\n-- code buffer\n");
-        hexdump(_code->buffer, _code->len);
-        if(debug_flag) {
-            fprintf(fp, "\n-- debug buffer\n");
-            hexdump(_debug->buffer, _debug->len);
-        }
-        fputs("\n*/\n\n", fp);
-
-    }
-#endif
-
-    scan_code();
-    if(debug_flag)
-        read_symbols();
-
-    disasm_data(fp);
-    disasm_code(fp);
-    fputc('\n', fp);
+    run();
 
     RETURN(0);
 }

@@ -21,16 +21,17 @@ FLEX_TARGET(SCANNER
 
 add_executable(${PROJECT_NAME}
     ${PROJECT_NAME}.c
-    classify.c
     operand.c
     disasm_code.c
     disasm_data.c
     scan.c
+    symbols.c
 )
 
 target_link_libraries(${PROJECT_NAME}
     gc
     cord
     common
+    vm_common
 )
 

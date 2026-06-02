@@ -2,9 +2,11 @@
 #include "classify.h"
 #include "operand.h"
 #include "scan.h"
+#include "symbols.h"
 
 extern byte_buffer_t* _code;
 extern byte_buffer_t* _data;
+extern bool debug_flag;
 
 void disasm_code(FILE* fp) {
 
@@ -14,11 +16,17 @@ void disasm_code(FILE* fp) {
     bool finished = false;
     size_t mark = 0;
 
-    fprintf(fp, "_00000000_code_start:\n");
     while(!finished) {
-        pseudo_sym_t* sym = find_sym(mark);
-        if(sym != NULL)
-            fprintf(fp, "_%08lX_code:\n", mark);
+        if(debug_flag) {
+            symbol_t* sym = find_symbol(mark << 0x01);
+            if(sym != NULL)
+                fprintf(fp, "%s:\n", sym->tag->buffer);
+        }
+        else {
+            pseudo_sym_t* sym = find_sym(mark << 0x01);
+            if(sym != NULL)
+                fprintf(fp, "_%08lX_code:\n", mark >> 0x01);
+        }
 
         opcode_t op = iterate_byte_buffer_uint8(_code, &mark);
         fprintf(fp, "\t%s ", opcode_to_str(op));

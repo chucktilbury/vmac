@@ -1,7 +1,9 @@
 #include "common.h"
+#include "symbols.h"
 
 extern byte_buffer_t* _code;
 extern byte_buffer_t* _data;
+extern bool debug_flag;
 
 static const char* _convert_char(uint8_t ch) {
 
@@ -23,11 +25,19 @@ void disasm_data(FILE* fp) {
     fputs("/*\n *  data section\n */\n", fp);
     bool finished = false;
     bool is_array = false;
-    size_t tmp, mark = 0;
+    uint8_t op;
+    size_t mark = 0;
     while(!finished) {
-        tmp = mark;
-        uint8_t op = iterate_byte_buffer_uint8(_data, &mark);
-        fprintf(fp, "%s _%08lX_data = ", opcode_to_str(op), tmp);
+        size_t tmp = mark;
+        op = iterate_byte_buffer_uint8(_data, &mark);
+        if(debug_flag) {
+            symbol_t* sym = find_symbol((tmp << 0x01) | 0x01);
+            if(sym != NULL)
+                fprintf(fp, "%s %s = ", opcode_to_str(op), sym->tag->buffer);
+        }
+        else {
+            fprintf(fp, "%s _%08lX_data = ", opcode_to_str(op), tmp >> 0x01);
+        }
 
         uint16_t len = read_byte_buffer_uint8(_data, mark);
         if(len == OPERAND_ARRAY) {

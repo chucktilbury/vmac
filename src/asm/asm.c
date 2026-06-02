@@ -6,7 +6,9 @@
 #include "./trace.h"
 #include "emit_to_buffers.h"
 #include "update_references.h"
+#include "debug.h"
 
+bool debug_flag = false;
 
 void cmdline(int argc, char** argv, char** env) {
 
@@ -14,12 +16,14 @@ void cmdline(int argc, char** argv, char** env) {
     add_cmdline('i', "infile", "ifile", "Specify the input file name", NULL, NULL, CMD_STR | CMD_ARGS | CMD_REQD);
     add_cmdline('o', "outfile", "ofile", "Specify the output file name", NULL, NULL, CMD_STR | CMD_ARGS | CMD_REQD);
     //add_cmdline('I', NULL, "path", "Add to the import path", NULL, NULL, CMD_STR | CMD_ARGS | CMD_LIST);
+    add_cmdline('d', "debug", "debug", "Emit debugging information", "0", NULL, CMD_SWITCH);
     add_cmdline('v', "verbosity", "verbosity", "Print more information", "1", NULL, CMD_NUM | CMD_ARGS);
     add_cmdline('h', "help", NULL, "Print this helpful information", NULL, cmdline_help, CMD_NONE);
     add_cmdline('V', "version", NULL, "Show the program version", NULL, cmdline_vers, CMD_NONE);
     parse_cmdline(argc, argv, env);
 
     verbosity = atoi(raw_string(get_cmd_opt("verbosity")));
+    debug_flag = atoi(raw_string(get_cmd_opt("debug")));
 
     setup_env();
 }
@@ -48,6 +52,10 @@ int main(int argc, char** argv, char** env) {
     yyparse();
     emit_to_buffers();
     update_references();
+
+    if(debug_flag) {
+        emit_debug_buffer();
+    }
 
     fname = get_cmd_opt("ofile");
     save_buffers(fname->buffer);

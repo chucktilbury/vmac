@@ -157,9 +157,11 @@ static void _class8_instruction(ast_class8_instruction_t* node) {
 
 void update_references(void) {
     ENTER;
-    LEGEND("begin update references");
-    _module(ast_root);
-    LEGEND("end update references");
+    if(verbosity >= DEFAULT_TRACE) {
+        LEGEND("begin update references");
+        _module(ast_root);
+        LEGEND("end update references");
+    }
     RETURN();
 }
 

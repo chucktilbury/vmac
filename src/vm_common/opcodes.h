@@ -100,7 +100,7 @@ typedef enum _opcode_t {
     SEC_DATA = 0x72,
 
     // 58 instructions
-    OP_MARKER = 0xC5,
+    OP_BREAK = 0xC5,
     OP_MOV = 0xC6,
     OP_PUSH = 0xC7,
     OP_PUSHL = 0xC8,

@@ -47,12 +47,7 @@ extern int level;
     } while(false)
 
 
-#define LEGEND(s) \
-    do { \
-        if(verbosity >= DEFAULT_TRACE) {             \
-            print_legend(s); \
-        }\
-    } while(false)
+#define LEGEND(s) print_legend(s);
 
 void print_legend(const char* str);
 void prnch(int ch);

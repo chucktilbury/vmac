@@ -14,7 +14,6 @@ symbol_t* create_symbol(const char* tag, opcode_t section, opcode_t type, uint32
     sym->type = type;
     sym->index = index;
     sym->section = section;
-    sym->is_defined = false;
 
     RETURN(sym);
 }

@@ -10,6 +10,8 @@
 
 byte_buffer_t* data_buffer = NULL;
 byte_buffer_t* code_buffer = NULL;
+extern byte_buffer_t* debug_buffer;
+extern bool debug_flag;
 
 static void _emit_literal(byte_buffer_t* buf, opcode_t type, void* val) {
     ENTER;
@@ -214,11 +216,22 @@ void save_buffers(const char* fname) {
         error("cannot open output file \"%s\": %s", fname, strerror(errno));
 
     size_t magic[2] = {MAGIC_NUMBER, SEPARATOR};
+    if(debug_flag)
+        magic[0] |= 0x01;
+
     fwrite(magic, sizeof(size_t), 2, fp);
     save_byte_buffer(code_buffer, fp);
+
     magic[0] = SEPARATOR;
     fwrite(magic, sizeof(size_t), 2, fp);
     save_byte_buffer(data_buffer, fp);
+
+    if(debug_flag) {
+        fwrite(magic, sizeof(size_t), 2, fp);
+        if(get_cmd_opt("debug"))
+            save_byte_buffer(debug_buffer, fp);
+    }
+
     fwrite(magic, sizeof(size_t), 2, fp);
     fclose(fp);
     RETURN();
@@ -226,16 +239,24 @@ void save_buffers(const char* fname) {
 
 void dump_buffers(void) {
 
-    LEGEND("begin assembler output");
+    if(verbosity >= DEFAULT_TRACE) {
+        LEGEND("begin assembler output");
 
-    LEGEND("begin code section");
-    hexdump(code_buffer->buffer, code_buffer->len);
-    LEGEND("end code section");
+        LEGEND("begin code section");
+        hexdump(code_buffer->buffer, code_buffer->len);
+        LEGEND("end code section");
 
-    LEGEND("begin data section");
-    hexdump(data_buffer->buffer, data_buffer->len);
-    LEGEND("end data section");
+        LEGEND("begin data section");
+        hexdump(data_buffer->buffer, data_buffer->len);
+        LEGEND("end data section");
 
-    LEGEND("end assembler output");
+        if(debug_flag) {
+            LEGEND("begin debug section");
+            hexdump(debug_buffer->buffer, debug_buffer->len);
+            LEGEND("end debug section");
+        }
+
+        LEGEND("end assembler output");
+    }
 }
 

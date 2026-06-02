@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
     emit.c
     ast_node.c
     trace.c
+    debug.c
     emit_to_buffers.c
     update_references.c
 )
@@ -36,5 +37,6 @@ target_link_libraries(${PROJECT_NAME}
     gc
     cord
     common
+    vm_common
 )
 

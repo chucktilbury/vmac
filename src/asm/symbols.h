@@ -14,7 +14,6 @@ typedef enum _symbol_section_t {
 typedef struct symbol_t {
     opcode_t section;
     opcode_t type;
-    bool is_defined;
     const char* tag;
     uint32_t index;
     struct symbol_t* left;

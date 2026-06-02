@@ -212,7 +212,7 @@ static void _code_label(ast_code_label_t* node) {
     ENTER;
 
     node->index = get_code_index();
-    node->sym->index = node->index;
+    node->sym->index = node->index <<= 0x01;
     TRACE("name: \"%s\" index: 0x%08X", node->name, node->index);
 
     RETURN();
@@ -222,7 +222,7 @@ static void _data_label(ast_data_label_t* node) {
     ENTER;
 
     node->index = get_data_index();
-    node->sym->index = node->index;
+    node->sym->index = node->index = (node->index << 0x01) | 0x01;
     TRACE("type: %s: name: \"%s\" index: 0x%08X", opcode_to_str(node->type), node->name, node->index);
     emit_data_uint8(node->type);
 
@@ -389,9 +389,11 @@ static void _class8_instruction(ast_class8_instruction_t* node) {
 
 void emit_to_buffers(void) {
     ENTER;
-    LEGEND("begin emit_to_buffers");
-    _module(ast_root);
-    LEGEND("end emit_to_buffers");
+    if(verbosity >= DEFAULT_TRACE) {
+        LEGEND("begin emit_to_buffers");
+        _module(ast_root);
+        LEGEND("end emit_to_buffers");
+    }
     RETURN();
 }
 

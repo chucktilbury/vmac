@@ -15,7 +15,6 @@ add_library(${PROJECT_NAME} STATIC
     cmdline.c
     error.c
     hexdump.c
-    opcodes.c
     colors.c
 )
 
