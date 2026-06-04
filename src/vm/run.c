@@ -17,6 +17,7 @@ void run(void) {
     bool finished = false;
     while(!finished) {
         opcode_t op = _fetch_8();
+        TRACE("instruction: %s", opcode_to_str(op));
         switch(op) {
             // class 1 instructions
             case OP_ADD:    _add();    break;
@@ -92,10 +93,10 @@ void run(void) {
             case OP_EXTERN: _extern(); break;
             case OP_LOAD:   _load();   break;
 
-            default: error("expected instruction but got %s", opcode_to_str(op));
+            default: error("expected instruction but got %s at 0x%08lX", opcode_to_str(op), IP_REG);
         }
 
-        if(IP_REG >= (register_t)_code->len)
+        if(IP_REG >= (vm_register_t)_code->len)
             finished = true;
     }
 

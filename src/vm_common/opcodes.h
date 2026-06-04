@@ -40,6 +40,8 @@ typedef enum _opcode_t {
     REG_R31 = 0x1F,
     REG_SP = 0x20,
     REG_IP = 0x21,
+    REG_FLAGS = 0x22,
+    MAX_REGS = 0x23,
 
     // relative registers
     REG_IR00 = 0x30,
@@ -76,6 +78,7 @@ typedef enum _opcode_t {
     REG_IR31 = 0x4F,
     REG_ISP = 0x50,
     REG_IIP = 0x51,
+    REG_IFLAGS = 0x52,
 
     // operand types
     OPERAND_INT8 = 0x60,

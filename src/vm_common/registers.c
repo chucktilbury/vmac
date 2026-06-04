@@ -1,5 +1,5 @@
 
 #include "vm_common.h"
 
-register_t registers[34];
+vm_register_t registers[MAX_REGS];
 

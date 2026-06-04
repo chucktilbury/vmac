@@ -62,11 +62,25 @@ static inline operand_t* _fetch_operand(void) {
                 oper->value.unum64 = *((double*)(&tmp));
             }
             break;
-        case OPERAND_LABEL:
-            uint32_t idx = _fetch_32();
-            operands could be a data or code value.
+        case OPERAND_LABEL: {
+                uint32_t idx = _fetch_32();
+                if(idx & 0x01) {
+                    // operand referrs to data
+                }
+                else {
+                    // operand referrs to code
+                }
+            }
             break;
-        case OPERAND_ILABEL:
+        case OPERAND_ILABEL: {
+                uint32_t idx = _fetch_32();
+                if(idx & 0x01) {
+                    // operand referrs to data
+                }
+                else {
+                    // operand referrs to code
+                }
+            }
             break;
         case OPERAND_STRING:
             break;
@@ -74,6 +88,7 @@ static inline operand_t* _fetch_operand(void) {
             error("unknown operand type: %s", opcode_to_str(oper->type));
 
     }
+    return oper;
 }
 
 #endif /* _OPERANDS_H_ */

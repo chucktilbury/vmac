@@ -4,8 +4,8 @@ int32 another_name[5]
 string foob = "this is a string"
 
 start:
-    mov r0, r12
     add r31, r1, 12
+    mov r0, r12
     lt R00, r31
     jmpf eggs
 bacon:

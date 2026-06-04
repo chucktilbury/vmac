@@ -8,7 +8,7 @@ add_executable(${PROJECT_NAME}
 )
 
 add_definitions(
-    -Wno-unused-parameter
+    -Wno-unused-variable
 )
 
 target_link_libraries(${PROJECT_NAME}
