@@ -241,4 +241,3 @@ void show_trace(void) {
     LEGEND("end trace");
     RETURN();
 }
-

@@ -15,7 +15,7 @@ void cmdline(int argc, char** argv, char** env) {
     init_cmdline("asm", "assembler", "0.1");
     add_cmdline('i', "infile", "ifile", "Specify the input file name", NULL, NULL, CMD_STR | CMD_ARGS | CMD_REQD);
     add_cmdline('o', "outfile", "ofile", "Specify the output file name", NULL, NULL, CMD_STR | CMD_ARGS | CMD_REQD);
-    //add_cmdline('I', NULL, "path", "Add to the import path", NULL, NULL, CMD_STR | CMD_ARGS | CMD_LIST);
+    // add_cmdline('I', NULL, "path", "Add to the import path", NULL, NULL, CMD_STR | CMD_ARGS | CMD_LIST);
     add_cmdline('d', "debug", "debug", "Emit debugging information", "0", NULL, CMD_SWITCH);
     add_cmdline('v', "verbosity", "verbosity", "Print more information", "1", NULL, CMD_NUM | CMD_ARGS);
     add_cmdline('h', "help", NULL, "Print this helpful information", NULL, cmdline_help, CMD_NONE);
@@ -32,14 +32,14 @@ int main(int argc, char** argv, char** env) {
 
     cmdline(argc, argv, env);
 
-// printf("sizeof(ast_data_label_t) = %lu\n", sizeof(ast_data_label_t));
-// printf("sizeof(ast_data_definition_t) = %lu\n", sizeof(ast_data_definition_t));
-// printf("sizeof(ast_instruction_t) = %lu\n", sizeof(ast_instruction_t));
+    // printf("sizeof(ast_data_label_t) = %lu\n", sizeof(ast_data_label_t));
+    // printf("sizeof(ast_data_definition_t) = %lu\n", sizeof(ast_data_definition_t));
+    // printf("sizeof(ast_instruction_t) = %lu\n", sizeof(ast_instruction_t));
 
     ENTER;
     string_t* fname = get_cmd_opt("ifile");
 
-    //load_input_buffer(fname);
+    // load_input_buffer(fname);
     FILE* fp = fopen(fname->buffer, "r");
     if(fp == NULL) {
         error("cannot open input file: \"%s\": %s", fname->buffer, strerror(errno));

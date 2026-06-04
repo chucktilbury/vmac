@@ -8,6 +8,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/src/asm
     ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/../gc/include
     ${PROJECT_SOURCE_DIR}/../common
     ${PROJECT_SOURCE_DIR}/../vm_common
     "/usr/local/include"

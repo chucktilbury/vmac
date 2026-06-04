@@ -11,7 +11,7 @@ extern bool debug_flag;
 void disasm_code(FILE* fp) {
 
     ENTER;
-    //fputs("\n", fp);
+    // fputs("\n", fp);
     fputs("/*\n *  code section\n */\n", fp);
     bool finished = false;
     size_t mark = 0;
@@ -33,7 +33,7 @@ void disasm_code(FILE* fp) {
         switch(classify_instruction(op)) {
             case CLASS_1:
                 fprintf(fp, "%s", opcode_to_str(iterate_byte_buffer_uint8(_code, &mark)));
-                //do_operand(fp, &mark);
+                // do_operand(fp, &mark);
                 fputs(", ", fp);
                 do_operand(fp, &mark);
                 fputs(", ", fp);
@@ -42,7 +42,7 @@ void disasm_code(FILE* fp) {
                 break;
             case CLASS_2:
                 fprintf(fp, "%s", opcode_to_str(iterate_byte_buffer_uint8(_code, &mark)));
-                //do_operand(fp, &mark);
+                // do_operand(fp, &mark);
                 fputs(", ", fp);
                 do_operand(fp, &mark);
                 fputs(", ", fp);
@@ -81,4 +81,3 @@ void disasm_code(FILE* fp) {
     fputs("\n", fp);
     RETURN();
 }
-

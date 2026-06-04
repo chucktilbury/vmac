@@ -25,33 +25,31 @@ static void _operand(operand_t* op) {
 
     switch(op->type) {
         case OPERAND_LABEL: {
-                ENTER;
-                TRACE("code label");
-                symbol_t* sym = find_symbol(op->value.str);
-                if(sym != NULL) {
-                    TRACE("location: 0x%08X index: 0x%08X", op->index, sym->index);
-                    write_code_uint32(op->index, sym->index);
-                }
-                else
-                    error("code symbol \"%s\" has no definition", op->value.str);
-                RETURN();
+            ENTER;
+            TRACE("code label");
+            symbol_t* sym = find_symbol(op->value.str);
+            if(sym != NULL) {
+                TRACE("location: 0x%08X index: 0x%08X", op->index, sym->index);
+                write_code_uint32(op->index, sym->index);
             }
-            break;
+            else
+                error("code symbol \"%s\" has no definition", op->value.str);
+            RETURN();
+        } break;
         case OPERAND_ILABEL: {
-                ENTER;
-                TRACE("data label");
-                symbol_t* sym = find_symbol(op->value.str);
-                if(sym != NULL) {
-                    TRACE("location: 0x%08X index: 0x%08X", op->index, sym->index);
-                    write_code_uint32(op->index, sym->index);
-                }
-                else
-                    error("data symbol \"%s\" has no definition", op->value.str);
-                RETURN();
+            ENTER;
+            TRACE("data label");
+            symbol_t* sym = find_symbol(op->value.str);
+            if(sym != NULL) {
+                TRACE("location: 0x%08X index: 0x%08X", op->index, sym->index);
+                write_code_uint32(op->index, sym->index);
             }
-            break;
-        default:
-            {}
+            else
+                error("data symbol \"%s\" has no definition", op->value.str);
+            RETURN();
+        } break;
+        default: {
+        }
     }
 }
 
@@ -164,4 +162,3 @@ void update_references(void) {
     }
     RETURN();
 }
-

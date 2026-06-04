@@ -70,4 +70,3 @@ operand_t* iterate_operand_list(operand_list_t* lst, size_t* mark) {
     }
     return NULL;
 }
-

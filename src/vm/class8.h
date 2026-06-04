@@ -8,11 +8,9 @@ _Pragma("clang diagnostic push")
 _Pragma("clang diagnostic ignored \"-Wimplicit-function-declaration\"")
 
 static inline void _extern(void) {
-
 }
 
 static inline void _load(void) {
-
 }
 
 _Pragma("clang diagnostic pop")

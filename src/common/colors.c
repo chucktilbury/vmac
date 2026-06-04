@@ -18,19 +18,19 @@ const char* colorize(colors_t arg1, colors_t arg2, colors_t arg3, const char* fm
     slen = strlen(buffer);
 
     if(arg1 != 0)
-        slen += snprintf(&buffer[slen], tlen-slen, "%d", arg1);
+        slen += snprintf(&buffer[slen], tlen - slen, "%d", arg1);
     if(arg2 != 0)
-        slen += snprintf(&buffer[slen], tlen-slen, ";%d", arg2);
+        slen += snprintf(&buffer[slen], tlen - slen, ";%d", arg2);
     if(arg3 != 0)
-        slen += snprintf(&buffer[slen], tlen-slen, ";%d", arg3);
+        slen += snprintf(&buffer[slen], tlen - slen, ";%d", arg3);
     strcat(&buffer[slen], "m");
     slen++;
 
     va_start(args, fmt);
-    slen += vsnprintf(&buffer[slen], tlen-slen, fmt, args);
+    slen += vsnprintf(&buffer[slen], tlen - slen, fmt, args);
     va_end(args);
 
-    snprintf(&buffer[slen], tlen-slen, "\x1b[m");
+    snprintf(&buffer[slen], tlen - slen, "\x1b[m");
 
     return buffer;
 }
@@ -59,7 +59,7 @@ void cprintf(colors_t arg1, colors_t arg2, colors_t arg3, const char* fmt, ...) 
 #else
 const char* colorize(colors_t attr, colors_t fg, colors_t bg, const char* fmt, ...) {
 
-    (void) attr, fg, bg;
+    (void)attr, fg, bg;
 
     va_list args;
     va_start(args, fmt);
@@ -71,7 +71,7 @@ const char* colorize(colors_t attr, colors_t fg, colors_t bg, const char* fmt, .
 
 void cprintf(colors_t arg1, colors_t arg2, colors_t arg3, const char* fmt, ...) {
 
-    (void) attr, fg, bg;
+    (void)attr, fg, bg;
 
     va_list args;
     va_start(args, fmt);
@@ -80,4 +80,3 @@ void cprintf(colors_t arg1, colors_t arg2, colors_t arg3, const char* fmt, ...) 
 }
 
 #endif
-

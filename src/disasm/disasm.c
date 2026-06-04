@@ -83,7 +83,6 @@ int main(int argc, char** argv, char** env) {
             hexdump(_debug->buffer, _debug->len);
         }
         fputs("\n*/\n\n", fp);
-
     }
 #endif
 

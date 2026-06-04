@@ -75,7 +75,7 @@ pseudo_sym_t* find_sym(uint32_t idx) {
 }
 
 static void _operand(size_t* mark) {
-    //ENTER;
+    // ENTER;
     opcode_t op = iterate_byte_buffer_uint8(_code, mark);
     switch(op) {
         case OPERAND_INT16:
@@ -99,15 +99,14 @@ static void _operand(size_t* mark) {
             iterate_byte_buffer_uint8(_code, mark);
             break;
         case OPERAND_LABEL: {
-                uint32_t idx = iterate_byte_buffer_uint32(_code, mark);
-                _insert_sym(idx);
-                //printf("_%08X_code\n", idx);
-            }
-            break;
+            uint32_t idx = iterate_byte_buffer_uint32(_code, mark);
+            _insert_sym(idx);
+            // printf("_%08X_code\n", idx);
+        } break;
         default:
             error("invalid operand type: %s", opcode_to_str(op));
     }
-    //RETURN();
+    // RETURN();
 }
 
 
@@ -146,10 +145,8 @@ void scan_code(void) {
         if(mark >= _code->len) {
             finished = true;
         }
-
     }
 
     DUMP;
     RETURN();
 }
-

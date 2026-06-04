@@ -133,4 +133,3 @@ ast_node_t* iterate_ast_node_list(ast_node_list_t* lst, size_t* mark);
 const char* ast_type_to_str(ast_node_type_t type);
 
 #endif /* _AST_NODE_H_ */
-

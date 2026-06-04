@@ -103,4 +103,3 @@ void read_symbols(void) {
     }
     RETURN();
 }
-

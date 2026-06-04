@@ -8,42 +8,42 @@ extern int level;
 
 #define INDENT trace_pad(level * 2, ' ')
 
-#define ENTER                                  \
-    do {                                       \
-        if(verbosity >= DEFAULT_TRACE) {       \
-            INDENT;                            \
+#define ENTER                                                                   \
+    do {                                                                        \
+        if(verbosity >= DEFAULT_TRACE) {                                        \
+            INDENT;                                                             \
             printf("%s %s()\n", colorize(fgYEL, aBOLD, 0, "ENTER:"), __func__); \
-            level++;                           \
-        }                                      \
+            level++;                                                            \
+        }                                                                       \
     } while(false)
 
-#define RETURN(...)                                               \
-    do {                                                          \
-        if(verbosity >= DEFAULT_TRACE) {                          \
-            level--;                                              \
-            INDENT;                                               \
+#define RETURN(...)                                                                               \
+    do {                                                                                          \
+        if(verbosity >= DEFAULT_TRACE) {                                                          \
+            level--;                                                                              \
+            INDENT;                                                                               \
             printf("%s %s()\n", colorize(fgYEL, aBOLD, 0, "RETURN(%s)", #__VA_ARGS__), __func__); \
-        }                                                         \
-        return __VA_ARGS__;                                       \
+        }                                                                                         \
+        return __VA_ARGS__;                                                                       \
     } while(false)
 
-#define TRACE(...)                         \
-    do {                                   \
-        if(verbosity >= DEFAULT_TRACE) {   \
-            INDENT;                        \
+#define TRACE(...)                                              \
+    do {                                                        \
+        if(verbosity >= DEFAULT_TRACE) {                        \
+            INDENT;                                             \
             printf("%s", colorize(fgCYA, aBOLD, 0, "TRACE: ")); \
-            printf(__VA_ARGS__); \
-            fputc('\n', stdout);           \
-        }                                  \
+            printf(__VA_ARGS__);                                \
+            fputc('\n', stdout);                                \
+        }                                                       \
     } while(false)
 
-#define TRACEX(n, ...)                     \
-    do {                                   \
-        if(verbosity >= (n)) {             \
-            INDENT;                        \
+#define TRACEX(n, ...)                                     \
+    do {                                                   \
+        if(verbosity >= (n)) {                             \
+            INDENT;                                        \
             printf("\x1b[1;36mTRACE:\x1b[m " __VA_ARGS__); \
-            fputc('\n', stdout);           \
-        }                                  \
+            fputc('\n', stdout);                           \
+        }                                                  \
     } while(false)
 
 

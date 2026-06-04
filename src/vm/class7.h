@@ -8,15 +8,12 @@ _Pragma("clang diagnostic push")
 _Pragma("clang diagnostic ignored \"-Wimplicit-function-declaration\"")
 
 static inline void _ret(void) {
-
 }
 
 static inline void _rett(void) {
-
 }
 
 static inline void _retf(void) {
-
 }
 
 static inline void _clrt(void) {
@@ -28,19 +25,15 @@ static inline void _sett(void) {
 }
 
 static inline void _exit(void) {
-
 }
 
 static inline void _abort(void) {
-
 }
 
 static inline void _nop(void) {
-
 }
 
 static inline void _break(void) {
-
 }
 
 _Pragma("clang diagnostic pop")

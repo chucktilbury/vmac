@@ -9,7 +9,7 @@
 #include "common.h"
 #include "symbols.h"
 #include "parse.h"
-//#include "parms.h"
+// #include "parms.h"
 #include <unistd.h>
 // #include "context.h"
 #include "parse_ref.h"
@@ -137,7 +137,7 @@ static void _get_reference_parms(symbol_t* sym) {
     ENTER;
 
     ASSERT(sym != NULL, "attempt to get reference parms on empty symbol stack");
-    //PRNCH;
+    // PRNCH;
 
     if(sym->arity != 0) // check for unwanted parameters
         consume_space();
@@ -269,4 +269,3 @@ void parse_ref(void) {
 
     RETURN();
 }
-

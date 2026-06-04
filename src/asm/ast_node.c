@@ -53,26 +53,27 @@ static size_t _get_node_size(ast_node_type_t type) {
 
 const char* ast_type_to_str(ast_node_type_t type) {
 
-    return (type == AST_MODULE)? "MODULE" :
-        (type == AST_MODULE_ITEM)? "MODULE_ITEM" :
-        (type == AST_CODE_LABEL)? "CODE_LABEL" :
-        (type == AST_DATA_LABEL)? "DATA_LABEL" :
-        (type == AST_DATA_DEFINITION)? "DATA_DEFINITION" :
-        (type == AST_INSTRUCTION)? "INSTRUCTION" :
-        (type == AST_CLASS1_INSTRUCTION)? "CLASS1_INSTRUCTION" :
-        (type == AST_CLASS2_INSTRUCTION)? "CLASS2_INSTRUCTION" :
-        (type == AST_CLASS3_INSTRUCTION)? "CLASS3_INSTRUCTION" :
-        (type == AST_CLASS4_INSTRUCTION)? "CLASS4_INSTRUCTION" :
-        (type == AST_CLASS5_INSTRUCTION)? "CLASS5_INSTRUCTION" :
-        (type == AST_CLASS6_INSTRUCTION)? "CLASS6_INSTRUCTION" :
-        (type == AST_CLASS7_INSTRUCTION)? "CLASS7_INSTRUCTION" :
-        (type == AST_CLASS8_INSTRUCTION)? "CLASS8_INSTRUCTION" : "UNKNOWN";
+    return (type == AST_MODULE)              ? "MODULE" :
+            (type == AST_MODULE_ITEM)        ? "MODULE_ITEM" :
+            (type == AST_CODE_LABEL)         ? "CODE_LABEL" :
+            (type == AST_DATA_LABEL)         ? "DATA_LABEL" :
+            (type == AST_DATA_DEFINITION)    ? "DATA_DEFINITION" :
+            (type == AST_INSTRUCTION)        ? "INSTRUCTION" :
+            (type == AST_CLASS1_INSTRUCTION) ? "CLASS1_INSTRUCTION" :
+            (type == AST_CLASS2_INSTRUCTION) ? "CLASS2_INSTRUCTION" :
+            (type == AST_CLASS3_INSTRUCTION) ? "CLASS3_INSTRUCTION" :
+            (type == AST_CLASS4_INSTRUCTION) ? "CLASS4_INSTRUCTION" :
+            (type == AST_CLASS5_INSTRUCTION) ? "CLASS5_INSTRUCTION" :
+            (type == AST_CLASS6_INSTRUCTION) ? "CLASS6_INSTRUCTION" :
+            (type == AST_CLASS7_INSTRUCTION) ? "CLASS7_INSTRUCTION" :
+            (type == AST_CLASS8_INSTRUCTION) ? "CLASS8_INSTRUCTION" :
+                                               "UNKNOWN";
 }
 
 ast_node_t* create_ast_node(ast_node_type_t type) {
 
     size_t size = _get_node_size(type);
-    //TRACE("create node: %s: %lu", ast_type_to_str(type), size);
+    // TRACE("create node: %s: %lu", ast_type_to_str(type), size);
     ast_node_t* node = _ALLOC(size);
     node->type = type;
 
@@ -91,7 +92,7 @@ ast_node_list_t* create_ast_node_list(void) {
 
 void append_ast_node_list(ast_node_list_t* lst, ast_node_t* node) {
 
-    if(lst->len+1 >= lst->cap) {
+    if(lst->len + 1 >= lst->cap) {
         lst->cap <<= 1;
         lst->list = _REALLOC_ARRAY(lst->list, ast_node_t*, lst->cap);
     }
@@ -110,4 +111,3 @@ ast_node_t* iterate_ast_node_list(ast_node_list_t* lst, size_t* mark) {
 
     return node;
 }
-

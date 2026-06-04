@@ -58,8 +58,7 @@ static void _emit_literal(byte_buffer_t* buf, opcode_t type, void* val) {
             TRACE("%s: %lu: %s", opcode_to_str(type), len, str);
             write_byte_buffer_uint16(buf, len);
             write_byte_buffer_str(buf, str);
-            }
-            break;
+        } break;
         case OPERAND_REG:
             TRACE("%s: %s", opcode_to_str(type), opcode_to_str(CAST_TO(int8_t, val)));
             write_byte_buffer_uint8(buf, CAST_TO(uint8_t, val));
@@ -73,14 +72,14 @@ static void _emit_literal(byte_buffer_t* buf, opcode_t type, void* val) {
             write_byte_buffer_uint8(buf, OPERAND_ARRAY);
             break;
         case OPERAND_LABEL: {
-                TRACE("%s: 0x%08lX", opcode_to_str(type), CAST_TO(int64_t, val));
-                opcode_t size = get_uint_size(CAST_TO(uint64_t, val));
-                TRACE("size: %s", opcode_to_str(size));
-                write_byte_buffer_uint8(buf, size);
-                _emit_literal(buf, size, val); // recursive entry
-            }
-            break;
-        default: error("unknown data type in emit_data()");
+            TRACE("%s: 0x%08lX", opcode_to_str(type), CAST_TO(int64_t, val));
+            opcode_t size = get_uint_size(CAST_TO(uint64_t, val));
+            TRACE("size: %s", opcode_to_str(size));
+            write_byte_buffer_uint8(buf, size);
+            _emit_literal(buf, size, val); // recursive entry
+        } break;
+        default:
+            error("unknown data type in emit_data()");
     }
     RETURN();
 }
@@ -215,7 +214,7 @@ void save_buffers(const char* fname) {
     if(fp == NULL)
         error("cannot open output file \"%s\": %s", fname, strerror(errno));
 
-    size_t magic[2] = {MAGIC_NUMBER, SEPARATOR};
+    size_t magic[2] = { MAGIC_NUMBER, SEPARATOR };
     if(debug_flag)
         magic[0] |= 0x01;
 
@@ -259,4 +258,3 @@ void dump_buffers(void) {
         LEGEND("end assembler output");
     }
 }
-

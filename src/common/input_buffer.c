@@ -229,4 +229,3 @@ string_t* get_crnt_input_buffer(void) {
     else
         return NULL;
 }
-

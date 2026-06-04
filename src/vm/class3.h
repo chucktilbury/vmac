@@ -29,7 +29,7 @@ static inline void _decu(void) {
 
 static inline void _not(void) {
     opcode_t reg = _fetch_8();
-    REG(reg) = ~ (uint64_t)REG(reg);
+    REG(reg) = ~(uint64_t)REG(reg);
 }
 
 _Pragma("clang diagnostic pop")

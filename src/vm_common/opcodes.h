@@ -168,4 +168,3 @@ typedef enum _opcode_t {
 const char* opcode_to_str(opcode_t type);
 
 #endif /* _OPCODES_H_ */
-

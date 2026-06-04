@@ -18,6 +18,6 @@ add_library(${PROJECT_NAME} STATIC
     colors.c
 )
 
-add_definitions( -DUSE_GC )
-include_directories(${PROJECT_SOURCE_DIR}/gc/include)
-add_subdirectory(gc)
+# add_definitions( -DUSE_GC )
+# include_directories(${PROJECT_SOURCE_DIR}/gc/include)
+# add_subdirectory(gc)

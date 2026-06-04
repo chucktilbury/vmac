@@ -97,4 +97,3 @@ inst_class_t classify_instruction(opcode_t op) {
 
     return 256;
 }
-

@@ -38,7 +38,7 @@ void emit_char(int ch) {
 
 #ifdef USE_TRACE
     if(verbosity >= DEFAULT_TRACE + 10) {
-        trace_pad(level*2, ' ');
+        trace_pad(level * 2, ' ');
         printf("EMIT: '");
         prnch(ch);
         printf("'\n");
@@ -51,7 +51,7 @@ void emit_str(const char* str) {
 
 #ifdef USE_TRACE
     if(verbosity >= DEFAULT_TRACE + 10) {
-        trace_pad(level*2, ' ');
+        trace_pad(level * 2, ' ');
         printf("EMIT: \"");
         prnstr(str);
         printf("\"\n");
@@ -64,7 +64,7 @@ void emit_string(string_t* str) {
 
 #ifdef USE_TRACE
     if(verbosity >= DEFAULT_TRACE + 10) {
-        trace_pad(level*2, ' ');
+        trace_pad(level * 2, ' ');
         printf("EMIT: \"");
         prnstr(str->buffer);
         printf("\"\n");
@@ -80,4 +80,3 @@ void dump_output_buffer(void) {
     fwrite(_out_buffer->buffer, sizeof(char), _out_buffer->len, stdout);
     LEGEND("end output buffer");
 }
-

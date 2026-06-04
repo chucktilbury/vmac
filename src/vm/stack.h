@@ -13,7 +13,7 @@ extern stack_t* vm_stack;
 
 static inline void push_stack(int64_t val) {
 
-    if(REG(REG_SP)+1 > vm_stack->cap) {
+    if(REG(REG_SP) + 1 > vm_stack->cap) {
         vm_stack->cap <<= 1;
         vm_stack->buffer = _REALLOC_ARRAY(vm_stack->buffer, int64_t, vm_stack->cap);
     }
@@ -37,7 +37,7 @@ static inline int64_t pop_stack(void) {
 static inline int64_t peek_stack(void) {
 
     if(REG(REG_SP) > 0)
-        return vm_stack->buffer[REG(REG_SP)-1];
+        return vm_stack->buffer[REG(REG_SP) - 1];
     else
         error("stack underrun in peek_vm_stack()");
 

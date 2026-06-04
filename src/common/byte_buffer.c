@@ -172,4 +172,3 @@ void save_byte_buffer(byte_buffer_t* buf, FILE* fp) {
     if(rval != buf->len)
         error("cannot write buffer_section 3: %s", strerror(errno));
 }
-

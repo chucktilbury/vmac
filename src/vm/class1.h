@@ -10,7 +10,6 @@ _Pragma("clang diagnostic ignored \"-Wimplicit-function-declaration\"")
 /*
     All instructions have a register followed by 2 generic operands.
 */
-
 static inline void _add(void) {
     opcode_t reg = _fetch_8();
     operand_t* oper1 = _fetch_operand();

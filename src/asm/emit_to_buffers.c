@@ -151,7 +151,7 @@ static void _data_operand(operand_t* op) {
             break;
         case OPERAND_STRING:
             TRACE("string: %s", op->value.str);
-            emit_data_uint16((uint16_t)strlen(op->value.str)+1);
+            emit_data_uint16((uint16_t)strlen(op->value.str) + 1);
             emit_data_str(op->value.str);
             break;
         case OPERAND_REG:
@@ -162,7 +162,7 @@ static void _data_operand(operand_t* op) {
             TRACE("indirect register: %s", opcode_to_str(op->value.opcode));
             emit_data_uint8(op->value.opcode);
             break;
-// TODO: fix this VV
+            // TODO: fix this VV
         case OPERAND_LABEL:
             TRACE("label: %s", op->value.str);
             emit_data_uint32(0);
@@ -396,4 +396,3 @@ void emit_to_buffers(void) {
     }
     RETURN();
 }
-

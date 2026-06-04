@@ -1,4 +1,4 @@
-# ASM
+#ASM
 This is a simple assembler for the virtual machine. It is intended that the macro processor will be run on the input before this program is executed. It outputs a binary file for the VM to run.
 
 ## General format of input
@@ -128,5 +128,3 @@ MUL R0,R12,R17 // 0xCC 0x00 0x11 0x0C 0x15 (OP, R0, descriptor, R12, R17)
 ### Class 8 instructions
 * ``EXTERN string``
 * ``LOAD string``
-
-

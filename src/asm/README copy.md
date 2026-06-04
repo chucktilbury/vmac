@@ -1,4 +1,4 @@
-# ASM
+#ASM
 This is a simple assembler for the virtual machine. It is intended that the macro processor will be run on the input before this program is executed. It outputs a binary file for the VM to run.
 
 ## General format of input
@@ -28,7 +28,7 @@ Instructions that are data specific are automatically encoded by the assembler. 
 The assembler understands data-specific instructions, but it is preferred to allow the assembler to choose which instruction to encode, based upon the parameters.
 
 
-# Everything below this point is wrong....
+#Everything below this point is wrong....
 
 ### Instruction format
 * Data movement instruction format: ``INST DEST,SRC``
@@ -213,4 +213,3 @@ If no initializer is specified then the data is initialized to zero.
     * ``[1, 2, 3, 4] // assign 4 slots with the numbers given``
 * ``DEF name[5] // reserve 5 words associated with name with no initializer``
 * ``DEF name // reserve one slot to name with no initializer``
-

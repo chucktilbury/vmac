@@ -13,8 +13,20 @@ add_subdirectory(tests EXCLUDE_FROM_ALL)
 add_subdirectory(docs EXCLUDE_FROM_ALL)
 
 file(GLOB_RECURSE format_xxfiles
-    ${PROJECT_SOURCE_DIR}/src/main/*.c
-    ${PROJECT_SOURCE_DIR}/src/main/*.h
+    ${PROJECT_SOURCE_DIR}/src/asm/*.c
+    ${PROJECT_SOURCE_DIR}/src/asm/*.h
+    ${PROJECT_SOURCE_DIR}/src/common/*.c
+    ${PROJECT_SOURCE_DIR}/src/common/*.h
+    ${PROJECT_SOURCE_DIR}/src/disasm/*.c
+    ${PROJECT_SOURCE_DIR}/src/disasm/*.h
+    ${PROJECT_SOURCE_DIR}/src/hexdump/*.c
+    ${PROJECT_SOURCE_DIR}/src/hexdump/*.h
+    ${PROJECT_SOURCE_DIR}/src/macros/*.c
+    ${PROJECT_SOURCE_DIR}/src/macros/*.h
+    ${PROJECT_SOURCE_DIR}/src/vm/*.c
+    ${PROJECT_SOURCE_DIR}/src/vm/*.h
+    ${PROJECT_SOURCE_DIR}/src/vm_common/*.c
+    ${PROJECT_SOURCE_DIR}/src/vm_common/*.h
 )
 
 add_custom_target(format
