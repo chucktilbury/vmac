@@ -1,4 +1,4 @@
-#include "common.h"
+#include "vm.h"
 
 byte_buffer_t* _data = NULL;
 byte_buffer_t* _code = NULL;

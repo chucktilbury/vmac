@@ -1,0 +1,13 @@
+
+
+_break, _mov, _push, _pushl, _pop, _add, _sub, _mul, _div, _mod,
+_addu, _subu, _mulu, _divu, _modu, _inc, _dec, _incu, _decu,
+_shl, _shr, _and, _or, _xor, _not, _equ, _equu, _neq, _nequ, _lt,
+_ltu, _gt, _gtu, _lte, _lteu, _gte, _gteu, _jmp, _jmpt, _jmpf,
+_jmpr, _jmprt, _jmprf, _call, _callt, _callf, _callr, _callrt,
+_callrf, _ret, _rett, _retf, _extern, _load, _clrt, _sett, _exit,
+_abort, _nop,
+
+
+            default:
+                error("expected instruction but got %s at 0x%08lX", opcode_to_str(op), IP_REG);

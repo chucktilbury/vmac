@@ -89,9 +89,9 @@ const char* opcode_to_str(opcode_t type) {
             (type == SEC_NONE)       ? "NONE" :
             (type == SEC_CODE)       ? "CODE" :
             (type == SEC_DATA)       ? "DATA" :
-            (type == OP_MOV)         ? "MOV" :
+            (type == OP_LOAD)        ? "LOAD" :
+            (type == OP_STOR)        ? "STOR" :
             (type == OP_PUSH)        ? "PUSH" :
-            (type == OP_PUSHL)       ? "PUSHL" :
             (type == OP_POP)         ? "POP" :
             (type == OP_ADD)         ? "ADD" :
             (type == OP_SUB)         ? "SUB" :
@@ -141,7 +141,7 @@ const char* opcode_to_str(opcode_t type) {
             (type == OP_RETT)        ? "RETT" :
             (type == OP_RETF)        ? "RETF" :
             (type == OP_EXTERN)      ? "EXTERN" :
-            (type == OP_LOAD)        ? "LOAD" :
+            (type == OP_LINK)        ? "LINK" :
             (type == OP_CLRT)        ? "CLRT" :
             (type == OP_SETT)        ? "SETT" :
             (type == OP_EXIT)        ? "EXIT" :

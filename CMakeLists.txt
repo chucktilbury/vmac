@@ -23,8 +23,8 @@ file(GLOB_RECURSE format_xxfiles
     ${PROJECT_SOURCE_DIR}/src/hexdump/*.h
     ${PROJECT_SOURCE_DIR}/src/macros/*.c
     ${PROJECT_SOURCE_DIR}/src/macros/*.h
-    ${PROJECT_SOURCE_DIR}/src/vm/*.c
-    ${PROJECT_SOURCE_DIR}/src/vm/*.h
+    # ${PROJECT_SOURCE_DIR}/src/vm/*.c
+    # ${PROJECT_SOURCE_DIR}/src/vm/*.h
     ${PROJECT_SOURCE_DIR}/src/vm_common/*.c
     ${PROJECT_SOURCE_DIR}/src/vm_common/*.h
 )

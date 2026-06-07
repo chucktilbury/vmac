@@ -102,11 +102,11 @@ typedef enum _opcode_t {
     SEC_CODE = 0x71,
     SEC_DATA = 0x72,
 
-    // 58 instructions
+    MIN_INSTRUCTION = 0xC5,
     OP_BREAK = 0xC5,
-    OP_MOV = 0xC6,
-    OP_PUSH = 0xC7,
-    OP_PUSHL = 0xC8,
+    OP_LOAD = 0xC6,
+    OP_STOR = 0xC7,
+    OP_PUSH = 0xC8,
     OP_POP = 0xC9,
     OP_ADD = 0xCA,
     OP_SUB = 0xCB,
@@ -156,15 +156,17 @@ typedef enum _opcode_t {
     OP_RETT = 0xF7,
     OP_RETF = 0xF8,
     OP_EXTERN = 0xF9,
-    OP_LOAD = 0xFA,
+    OP_LINK = 0xFA,
     OP_CLRT = 0xFB,
     OP_SETT = 0xFC,
     OP_EXIT = 0xFD,
     OP_ABORT = 0xFE,
     OP_NOP = 0xFF,
+    MAX_INSTRUCTION = 0xFF,
 
 } opcode_t;
 
+#define INSTR_IDX(v) ((v)-MIN_INSTRUCTION)
 const char* opcode_to_str(opcode_t type);
 
 #endif /* _OPCODES_H_ */

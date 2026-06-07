@@ -95,7 +95,8 @@ static int _get_uint_size(uint64_t val) {
 "SP"|"STACK" { return SP; }
 "IP" { return IP; }
 
-"MOV"|"MOVE" { return MOV; }
+"LOAD"  { return LOAD; }
+"STOR"  { return STOR; }
 "PUSH"  { return PUSH; }
 "POP"   { return POP; }
 "ADD"   { return ADD; }

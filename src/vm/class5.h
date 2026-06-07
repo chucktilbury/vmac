@@ -1,60 +1,18 @@
 #ifndef _CLASS5_H_
 #define _CLASS5_H_
 
-#include "vm_common.h"
-#include "operands.h"
 
-_Pragma("clang diagnostic push")
-_Pragma("clang diagnostic ignored \"-Wimplicit-function-declaration\"")
-
-static inline void _jmp(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _jmpt(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _jmpf(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _jmpr(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _jmprt(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _jmprf(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _call(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _callt(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _callf(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _callr(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _callrt(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-static inline void _callrf(void) {
-    operand_t* oper = _fetch_operand();
-}
-
-_Pragma("clang diagnostic pop")
+void _jmp(void);
+void _jmpt(void);
+void _jmpf(void);
+void _jmpr(void);
+void _jmprt(void);
+void _jmprf(void);
+void _call(void);
+void _callt(void);
+void _callf(void);
+void _callr(void);
+void _callrt(void);
+void _callrf(void);
 
 #endif /* _CLASS5_H_ */

@@ -62,7 +62,7 @@ static inline operand_t* _fetch_operand(void) {
             oper->value.unum64 = *((double*)(&tmp));
         } break;
         case OPERAND_LABEL: {
-            uint32_t idx = _fetch_32();
+            int32_t idx = _fetch_32();
             if(idx & 0x01) {
                 // operand referrs to data
             }
