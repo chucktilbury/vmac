@@ -1,2 +1,2 @@
 # vmac
-Virtual machine with assembler and debugger.
+Virtual machine with macro processor, assembler, and debugger.
